@@ -7,20 +7,12 @@
   "frame": {
     "version": "1",
     "name": "Base Fish",
-    "subtitle": "Match-3 Puzzle Game",
-    "description": "Play Base Fish, a match-3 puzzle game with water physics. Collect unique fish NFTs and compete on the global leaderboard!",
-    "iconUrl": "https://my-fishdom-game.vercel.app/fish.svg",
+    "iconUrl": "https://my-fishdom-game.vercel.app/frame-image.png",
     "homeUrl": "https://my-fishdom-game.vercel.app",
     "imageUrl": "https://my-fishdom-game.vercel.app/frame-image.png",
-    "splashImageUrl": "https://my-fishdom-game.vercel.app/fish.svg",
-    "splashBackgroundColor": "#0d2847",
-    "webhookUrl": "https://my-fishdom-game.vercel.app/api/webhook",
-    "primaryCategory": "games",
-    "tags": ["game", "puzzle", "match3", "fish", "base", "nft"],
-    "heroImageUrl": "https://my-fishdom-game.vercel.app/og-image.png",
-    "tagline": "Match fish, earn points, top the leaderboard!",
-    "ogTitle": "Base Fish - Match-3 Puzzle Game",
-    "ogDescription": "Play Base Fish on Base Network. Collect fish NFTs and compete globally!",
-    "ogImageUrl": "https://my-fishdom-game.vercel.app/og-image.png"
+    "button": {
+      "title": "Play Now",
+      "action": "launch_frame"
+    }
   }
 }
