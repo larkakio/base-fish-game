@@ -42,6 +42,8 @@ const App: React.FC = () => {
   // Modals
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showShop, setShowShop] = useState(false);
+  const [showGameOver, setShowGameOver] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
 
   // Game instance
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -206,6 +208,9 @@ const App: React.FC = () => {
 
   const handleGameOver = useCallback(async (score: number) => {
     // Save final score
+    setFinalScore(score);
+    setShowGameOver(true);
+    
     if (address) {
       await saveScore({
         walletAddress: address,
@@ -223,6 +228,34 @@ const App: React.FC = () => {
       }));
     }
   }, [address, farcasterUser, currentLevel, selectedCharacter]);
+
+  // Share score to Warpcast
+  const shareScore = useCallback(() => {
+    const appUrl = 'https://my-fishdom-game.vercel.app';
+    const text = encodeURIComponent(`I just scored ${finalScore} points in Base Fish! 🐠🎮\n\nCan you beat my score?`);
+    const embedUrl = encodeURIComponent(appUrl);
+    const warpcastUrl = `https://warpcast.com/~/compose?text=${text}&embeds[]=${embedUrl}`;
+    
+    // Open in new window or use Farcaster SDK
+    if (typeof window !== 'undefined') {
+      window.open(warpcastUrl, '_blank');
+    }
+  }, [finalScore]);
+
+  // Go back to menu
+  const goToMenu = useCallback(() => {
+    if (gameInstanceRef.current) {
+      gameInstanceRef.current.destroy();
+      gameInstanceRef.current = null;
+    }
+    setCurrentScreen('menu');
+  }, []);
+
+  // Close game over and go to menu
+  const handleCloseGameOver = useCallback(() => {
+    setShowGameOver(false);
+    goToMenu();
+  }, [goToMenu]);
 
   // Start game - Orange Fish is always available
   const startGame = useCallback(() => {
@@ -267,15 +300,6 @@ const App: React.FC = () => {
       }
     }, 500);
   }, [currentLevel, selectedCharacter, ownedCharacters, handleScoreUpdate, handleMovesUpdate, handleLevelComplete, handleGameOver]);
-
-  // Go back to menu
-  const goToMenu = useCallback(() => {
-    if (gameInstanceRef.current) {
-      gameInstanceRef.current.destroy();
-      gameInstanceRef.current = null;
-    }
-    setCurrentScreen('menu');
-  }, []);
 
   // Character purchase handler - requires Base network
   const handlePurchaseCharacter = useCallback(async (characterId: number, price: bigint) => {
@@ -586,6 +610,103 @@ const App: React.FC = () => {
         isOnBase={isOnBase}
         onSwitchNetwork={handleSwitchToBase}
       />
+
+      {/* Game Over Modal with Share */}
+      <AnimatePresence>
+        {showGameOver && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.8, y: 50 }}
+              transition={{ type: 'spring', damping: 20 }}
+              className="w-full max-w-sm bg-gradient-to-b from-red-900 via-purple-900 to-indigo-950 rounded-3xl p-6 border border-red-400/30 text-center shadow-2xl"
+            >
+              {/* Game Over Header */}
+              <motion.div
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 0.5, repeat: 2 }}
+                className="text-6xl mb-4"
+              >
+                🐠💔
+              </motion.div>
+              
+              <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-300 to-pink-300 mb-2">
+                Game Over!
+              </h2>
+              
+              <p className="text-purple-200 mb-6">Level {currentLevel}</p>
+              
+              {/* Score Display */}
+              <div className="bg-black/30 rounded-2xl p-4 mb-6">
+                <p className="text-sm text-purple-300 mb-1">YOUR SCORE</p>
+                <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-400">
+                  {finalScore.toLocaleString()}
+                </p>
+                {finalScore >= userStats.highScore && finalScore > 0 && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-emerald-400 font-bold mt-2"
+                  >
+                    🎉 New High Score!
+                  </motion.p>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                {/* Share to Warpcast */}
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={shareScore}
+                  className="w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-2xl font-bold text-white text-lg shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
+                >
+                  <span>📣</span> Share on Warpcast
+                </motion.button>
+
+                {/* Play Again */}
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => {
+                    setShowGameOver(false);
+                    startGame();
+                  }}
+                  className="w-full py-4 px-6 bg-gradient-to-r from-emerald-400 to-cyan-500 hover:from-emerald-500 hover:to-cyan-600 rounded-2xl font-bold text-white text-lg shadow-lg shadow-cyan-500/30"
+                >
+                  🔄 Play Again
+                </motion.button>
+
+                {/* Back to Menu */}
+                <button
+                  onClick={handleCloseGameOver}
+                  className="w-full py-3 px-6 bg-white/10 hover:bg-white/20 rounded-xl font-medium text-white/80 transition-colors"
+                >
+                  Back to Menu
+                </button>
+              </div>
+
+              {/* Leaderboard prompt */}
+              <button
+                onClick={() => {
+                  setShowGameOver(false);
+                  setShowLeaderboard(true);
+                }}
+                className="mt-4 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors"
+              >
+                🏆 View Leaderboard
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
