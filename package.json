@@ -1,0 +1,37 @@
+{
+  "name": "fishdom-base-miniapp",
+  "version": "1.0.0",
+  "description": "Match-3 puzzle game Mini App for Base and Farcaster Frame v2",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "deploy:contract": "npx hardhat run scripts/deploy.js --network base"
+  },
+  "dependencies": {
+    "@farcaster/frame-sdk": "^0.0.26",
+    "@privy-io/react-auth": "^1.88.4",
+    "@tanstack/react-query": "^5.59.0",
+    "firebase": "^10.14.0",
+    "framer-motion": "^11.11.1",
+    "phaser": "^3.85.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "viem": "^2.21.19",
+    "wagmi": "^2.12.17"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "autoprefixer": "^10.4.20",
+    "hardhat": "^2.22.12",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8"
+  }
+}

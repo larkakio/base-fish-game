@@ -1,0 +1,38 @@
+{
+  "name": "Fishdom",
+  "short_name": "Fishdom",
+  "description": "Match-3 puzzle game with water physics. Collect unique fish NFTs and compete on the global leaderboard!",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d2847",
+  "theme_color": "#0d2847",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "accountAssociation": {
+    "header": "eyJmaWQiOjEyMzQ1NiwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVmMTIifQ",
+    "payload": "eyJkb21haW4iOiJmaXNoZG9tLmJhc2UuYXBwIn0",
+    "signature": "MHg..."
+  },
+  "frame": {
+    "version": "1",
+    "name": "Fishdom",
+    "iconUrl": "https://fishdom.base.app/icons/icon-512.png",
+    "homeUrl": "https://fishdom.base.app",
+    "imageUrl": "https://fishdom.base.app/frame-image.png",
+    "buttonTitle": "🎮 Play",
+    "splashImageUrl": "https://fishdom.base.app/splash.png",
+    "splashBackgroundColor": "#0d2847",
+    "webhookUrl": "https://fishdom.base.app/api/webhook"
+  }
+}
