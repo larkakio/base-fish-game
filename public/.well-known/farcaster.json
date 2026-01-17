@@ -11,7 +11,7 @@
     "description": "Play Base Fish, a match-3 puzzle game with water physics. Collect unique fish NFTs and compete on the global leaderboard!",
     "iconUrl": "https://my-fishdom-game.vercel.app/icon-1024.png",
     "homeUrl": "https://my-fishdom-game.vercel.app",
-    "splashImageUrl": "https://my-fishdom-game.vercel.app/hero-image.png",
+    "splashImageUrl": "https://my-fishdom-game.vercel.app/icon-1024.png",
     "splashBackgroundColor": "#0f172a",
     "webhookUrl": "https://my-fishdom-game.vercel.app/api/webhook",
     "primaryCategory": "games",

@@ -21,7 +21,7 @@
     "homeUrl": "https://my-fishdom-game.vercel.app",
     "imageUrl": "https://my-fishdom-game.vercel.app/hero-image.png",
     "buttonTitle": "🎮 Play",
-    "splashImageUrl": "https://my-fishdom-game.vercel.app/hero-image.png",
+    "splashImageUrl": "https://my-fishdom-game.vercel.app/icon-1024.png",
     "splashBackgroundColor": "#0f172a"
   }
 }

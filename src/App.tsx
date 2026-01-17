@@ -187,18 +187,57 @@ const App: React.FC = () => {
 
   const handleConnect = useCallback(async () => {
     try {
+      console.log('[Base Fish] Connecting wallet...');
+      
+      // First try Farcaster SDK wallet (for Warpcast/Base App)
+      if (sdk.wallet?.ethProvider) {
+        console.log('[Base Fish] Using Farcaster SDK wallet');
+        try {
+          // Request accounts from Farcaster wallet
+          const accounts = await sdk.wallet.ethProvider.request({
+            method: 'eth_requestAccounts',
+          });
+          console.log('[Base Fish] Farcaster wallet accounts:', accounts);
+          
+          // Use wagmi connect with the SDK provider
+          connect(
+            { connector: injected(), chainId: REQUIRED_CHAIN_ID },
+            {
+              onSuccess: () => {
+                console.log('[Base Fish] Connected via Farcaster SDK');
+                if (chainId !== REQUIRED_CHAIN_ID) {
+                  handleSwitchToBase();
+                }
+              },
+              onError: (error) => {
+                console.error('[Base Fish] Farcaster connect error:', error);
+              },
+            }
+          );
+          return;
+        } catch (sdkError) {
+          console.log('[Base Fish] Farcaster SDK wallet failed, trying injected:', sdkError);
+        }
+      }
+      
+      // Fallback to injected wallet (MetaMask, etc.)
+      console.log('[Base Fish] Using injected wallet');
       connect(
         { connector: injected(), chainId: REQUIRED_CHAIN_ID },
         {
           onSuccess: () => {
+            console.log('[Base Fish] Connected via injected wallet');
             if (chainId !== REQUIRED_CHAIN_ID) {
               handleSwitchToBase();
             }
           },
+          onError: (error) => {
+            console.error('[Base Fish] Injected connect error:', error);
+          },
         }
       );
     } catch (error) {
-      console.error('Failed to connect wallet:', error);
+      console.error('[Base Fish] Failed to connect wallet:', error);
     }
   }, [connect, chainId, handleSwitchToBase]);
 
