@@ -776,15 +776,38 @@ class GameScene extends Phaser.Scene {
     const w = this.scale.width, h = this.scale.height;
     
     this.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0.8);
-    this.add.text(w / 2, h / 2 - 60, '🎉', { fontSize: '60px' }).setOrigin(0.5);
-    this.add.text(w / 2, h / 2, 'Level Complete!', {
+    this.add.text(w / 2, h / 2 - 80, '🎉', { fontSize: '60px' }).setOrigin(0.5);
+    this.add.text(w / 2, h / 2 - 20, 'Level Complete!', {
       fontSize: '32px', fontFamily: 'Arial Black', color: '#ffd700', stroke: '#000', strokeThickness: 5,
     }).setOrigin(0.5);
-    this.add.text(w / 2, h / 2 + 45, `Score: ${this.score}`, {
+    this.add.text(w / 2, h / 2 + 30, `Score: ${this.score}`, {
       fontSize: '24px', fontFamily: 'Arial', color: '#fff',
     }).setOrigin(0.5);
     
-    this.onLevelComplete(this.currentLevel, this.score);
+    // Next Level button
+    const nextLevel = this.currentLevel + 1;
+    const buttonText = nextLevel <= 10 ? `Next Level (${nextLevel})` : 'You Win! 🏆';
+    const btnBg = this.add.rectangle(w / 2, h / 2 + 100, 200, 50, 0x2ecc71, 1)
+      .setInteractive({ useHandCursor: true })
+      .setStrokeStyle(3, 0x27ae60);
+    const btnLabel = this.add.text(w / 2, h / 2 + 100, buttonText, {
+      fontSize: '20px', fontFamily: 'Arial Black', color: '#fff',
+    }).setOrigin(0.5);
+    
+    btnBg.on('pointerover', () => btnBg.setFillStyle(0x27ae60));
+    btnBg.on('pointerout', () => btnBg.setFillStyle(0x2ecc71));
+    btnBg.on('pointerdown', () => {
+      if (nextLevel <= 10) {
+        // Restart scene with next level
+        gameData.level = nextLevel;
+        this.scene.restart({ ...gameData });
+      } else {
+        // Game completed - notify parent
+        this.onLevelComplete(this.currentLevel, this.score, true);
+      }
+    });
+    
+    this.onLevelComplete(this.currentLevel, this.score, false);
   }
 
   showGameOver() {
@@ -792,12 +815,28 @@ class GameScene extends Phaser.Scene {
     const w = this.scale.width, h = this.scale.height;
     
     this.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0.8);
-    this.add.text(w / 2, h / 2 - 30, 'Game Over', {
+    this.add.text(w / 2, h / 2 - 60, '😢', { fontSize: '50px' }).setOrigin(0.5);
+    this.add.text(w / 2, h / 2 - 10, 'Game Over', {
       fontSize: '38px', fontFamily: 'Arial Black', color: '#ff4757', stroke: '#000', strokeThickness: 5,
     }).setOrigin(0.5);
-    this.add.text(w / 2, h / 2 + 30, `Score: ${this.score}`, {
+    this.add.text(w / 2, h / 2 + 40, `Score: ${this.score}`, {
       fontSize: '24px', fontFamily: 'Arial', color: '#fff',
     }).setOrigin(0.5);
+    
+    // Try Again button
+    const btnBg = this.add.rectangle(w / 2, h / 2 + 110, 180, 50, 0x3498db, 1)
+      .setInteractive({ useHandCursor: true })
+      .setStrokeStyle(3, 0x2980b9);
+    this.add.text(w / 2, h / 2 + 110, 'Try Again', {
+      fontSize: '22px', fontFamily: 'Arial Black', color: '#fff',
+    }).setOrigin(0.5);
+    
+    btnBg.on('pointerover', () => btnBg.setFillStyle(0x2980b9));
+    btnBg.on('pointerout', () => btnBg.setFillStyle(0x3498db));
+    btnBg.on('pointerdown', () => {
+      // Restart current level
+      this.scene.restart({ ...gameData });
+    });
     
     this.onGameOver(this.score);
   }
