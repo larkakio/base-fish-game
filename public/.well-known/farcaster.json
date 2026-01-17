@@ -1,18 +1,25 @@
 {
   "accountAssociation": {
-    "header": "eyJmaWQiOi0xLCJ0eXBlIjoiY3VzdG9keSIsImtleSI6IjB4NzYwQjA0NDc5NjM4MTExNzNmRjg3YDPBYzA5OEJBQ0YxNzNCYkU0OCJ9",
+    "header": "eyJmaWQiOjIzOTA2LCJ0eXBlIjoiYXV0aCIsImtleSI6IjB4MGFjMzAzOTY2NjJFZGY5NjAzNkRBYTYwNjU2N2Y3OThmNTE1MkRiNSJ9",
     "payload": "eyJkb21haW4iOiJteS1maXNoZG9tLWdhbWUudmVyY2VsLmFwcCJ9",
-    "signature": "AAAAAAAAAAAAAAAAyhG94Fl3s2MRZwKIYr4qFzl2yhEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiSCrVbLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAul7REO_bo9AFv8iC11NYrLu4WEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASQ_-6NvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAANfPPKT1cqTD3MS1broqi3I4xFE0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAPhSELIcxQMC9He6VmhtIBncm2etAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABB15uQzc3FIWBLCAcjtJCsf5qTydC9yPbVFTu9NmpDfaIjSkT8F4OVV_Kg4Y5Y4fk6KDicmU5ZISMujg1N0_c7PxsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZJJkkmSSZJJkkmSSZJJkkmSSZJJkkmSSZJJkkmSSZJI"
+    "signature": "Pm9rpb7tsgvQsrB3WjBZE0uo/dJ/V2rqh9OrGEnQObRem/kUicYczfFzF31bH/9Sn/IsImI8G5H44pM2gq3OMxw="
   },
-  "frame": {
+  "miniapp": {
     "version": "1",
     "name": "Base Fish",
+    "subtitle": "Match-3 Puzzle Game",
+    "description": "Play Base Fish, a match-3 puzzle game with water physics. Collect unique fish NFTs and compete on the global leaderboard!",
     "iconUrl": "https://my-fishdom-game.vercel.app/frame-image.png",
     "homeUrl": "https://my-fishdom-game.vercel.app",
-    "imageUrl": "https://my-fishdom-game.vercel.app/frame-image.png",
-    "button": {
-      "title": "Play Now",
-      "action": "launch_frame"
-    }
+    "splashImageUrl": "https://my-fishdom-game.vercel.app/frame-image.png",
+    "splashBackgroundColor": "#0d2847",
+    "webhookUrl": "https://my-fishdom-game.vercel.app/api/webhook",
+    "primaryCategory": "games",
+    "tags": ["game", "puzzle", "match3", "fish", "base", "nft"],
+    "heroImageUrl": "https://my-fishdom-game.vercel.app/og-image.png",
+    "tagline": "Match fish, earn points, top the leaderboard!",
+    "ogTitle": "Base Fish - Match-3 Puzzle Game",
+    "ogDescription": "Play Base Fish on Base Network. Collect fish NFTs and compete globally!",
+    "ogImageUrl": "https://my-fishdom-game.vercel.app/og-image.png"
   }
 }
