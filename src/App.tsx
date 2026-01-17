@@ -74,11 +74,15 @@ const App: React.FC = () => {
   useEffect(() => {
     const initSDK = async () => {
       try {
+        console.log('[Base Fish] Initializing Farcaster SDK...');
+        
         // Get context from Farcaster
         const context = await sdk.context;
+        console.log('[Base Fish] SDK Context:', context);
         
         if (context?.user) {
           setFarcasterUser(context.user);
+          console.log('[Base Fish] User:', context.user);
         }
 
         // Get safe area insets for mobile
@@ -86,11 +90,15 @@ const App: React.FC = () => {
           setSafeAreaInsets(context.client.safeAreaInsets);
         }
 
-        // Signal ready to Farcaster
-        sdk.actions.ready();
         setIsSDKLoaded(true);
+        
+        // Signal ready to Farcaster after a short delay to ensure render
+        setTimeout(() => {
+          sdk.actions.ready();
+          console.log('[Base Fish] SDK ready() called');
+        }, 100);
       } catch (error) {
-        console.log('Not in Farcaster Frame context, running standalone');
+        console.log('[Base Fish] Not in Farcaster Frame context, running standalone');
         setIsSDKLoaded(true);
       }
     };
