@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import sdk from '@farcaster/frame-sdk';
-import { useAccount, useConnect, useWriteContract, useReadContract, useSwitchChain, useChainId, useConnectors } from 'wagmi';
+import { useAccount, useConnect, useWriteContract, useReadContract, useSwitchChain, useChainId } from 'wagmi';
+import { injected } from 'wagmi/connectors';
 
 import FishdomGame from './game/GameEngine';
 import Leaderboard from './components/Leaderboard';
@@ -57,7 +58,6 @@ const App: React.FC = () => {
   // Wagmi hooks
   const { address, isConnected } = useAccount();
   const { connect } = useConnect();
-  const connectors = useConnectors();
   const { writeContract } = useWriteContract();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
@@ -188,58 +188,41 @@ const App: React.FC = () => {
   const handleConnect = useCallback(async () => {
     try {
       console.log('[Base Fish] Connecting wallet...');
-      console.log('[Base Fish] Available connectors:', connectors.map(c => c.id));
       
-      // Find the Farcaster connector
-      const farcasterConnector = connectors.find(c => c.id === 'farcaster');
-      const injectedConnector = connectors.find(c => c.id === 'injected');
-      
-      // Check if we're in Farcaster context and have SDK wallet
-      if (sdk.wallet?.ethProvider && farcasterConnector) {
-        console.log('[Base Fish] Using Farcaster connector');
-        connect(
-          { connector: farcasterConnector, chainId: REQUIRED_CHAIN_ID },
-          {
-            onSuccess: () => {
-              console.log('[Base Fish] Connected via Farcaster');
-              if (chainId !== REQUIRED_CHAIN_ID) {
-                handleSwitchToBase();
-              }
-            },
-            onError: (error) => {
-              console.error('[Base Fish] Farcaster connect error:', error);
-              // Try injected as fallback
-              if (injectedConnector) {
-                console.log('[Base Fish] Falling back to injected');
-                connect({ connector: injectedConnector, chainId: REQUIRED_CHAIN_ID });
-              }
-            },
-          }
-        );
-      } else if (injectedConnector) {
-        // Fallback to injected wallet
-        console.log('[Base Fish] Using injected connector');
-        connect(
-          { connector: injectedConnector, chainId: REQUIRED_CHAIN_ID },
-          {
-            onSuccess: () => {
-              console.log('[Base Fish] Connected via injected');
-              if (chainId !== REQUIRED_CHAIN_ID) {
-                handleSwitchToBase();
-              }
-            },
-            onError: (error) => {
-              console.error('[Base Fish] Injected connect error:', error);
-            },
-          }
-        );
-      } else {
-        console.error('[Base Fish] No connectors available');
+      // Check if Farcaster SDK wallet is available (inside Warpcast/Base App)
+      if (sdk.wallet?.ethProvider) {
+        console.log('[Base Fish] Farcaster SDK wallet detected');
+        try {
+          // Request accounts directly from Farcaster SDK
+          await sdk.wallet.ethProvider.request({
+            method: 'eth_requestAccounts',
+          });
+          console.log('[Base Fish] Farcaster wallet connected');
+        } catch (sdkError) {
+          console.log('[Base Fish] SDK request failed:', sdkError);
+        }
       }
+      
+      // Use wagmi injected connector (will pick up Farcaster's injected provider)
+      console.log('[Base Fish] Connecting via injected connector');
+      connect(
+        { connector: injected(), chainId: REQUIRED_CHAIN_ID },
+        {
+          onSuccess: () => {
+            console.log('[Base Fish] Connected successfully');
+            if (chainId !== REQUIRED_CHAIN_ID) {
+              handleSwitchToBase();
+            }
+          },
+          onError: (error) => {
+            console.error('[Base Fish] Connect error:', error);
+          },
+        }
+      );
     } catch (error) {
       console.error('[Base Fish] Failed to connect wallet:', error);
     }
-  }, [connect, connectors, chainId, handleSwitchToBase]);
+  }, [connect, chainId, handleSwitchToBase]);
 
   const handleScoreUpdate = useCallback((score: number) => {
     setCurrentScore(score);
