@@ -93,22 +93,22 @@ const Leaderboard: React.FC<LeaderboardProps> = ({
             <div className="relative px-6 pt-6 pb-4 bg-gradient-to-b from-cyan-800/50 to-transparent">
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                className="absolute top-4 right-4 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
               >
-                <span className="text-white text-xl">×</span>
+                <span className="text-white text-2xl">×</span>
               </button>
               
               <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300 text-center">
                 🏆 Leaderboard
               </h2>
               
-              {/* Timeframe Tabs */}
+              {/* Timeframe Tabs - min 44px touch target */}
               <div className="flex gap-2 mt-4 p-1 bg-black/20 rounded-xl">
                 {(['daily', 'weekly', 'allTime'] as const).map((tf) => (
                   <button
                     key={tf}
                     onClick={() => setTimeframe(tf)}
-                    className={`flex-1 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
+                    className={`flex-1 py-3 px-3 min-h-[44px] rounded-lg text-sm font-semibold transition-all ${
                       timeframe === tf
                         ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg'
                         : 'text-cyan-300 hover:bg-white/10'

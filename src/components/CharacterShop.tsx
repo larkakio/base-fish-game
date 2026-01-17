@@ -137,9 +137,9 @@ const CharacterShop: React.FC<CharacterShopProps> = ({
             <div className="relative px-6 pt-6 pb-4 bg-gradient-to-b from-purple-800/50 to-transparent">
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                className="absolute top-4 right-4 w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
               >
-                <span className="text-white text-xl">×</span>
+                <span className="text-white text-2xl">×</span>
               </button>
               
               <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 text-center">
@@ -233,13 +233,13 @@ const CharacterShop: React.FC<CharacterShopProps> = ({
                           </div>
                         </div>
 
-                        {/* Action Button */}
+                        {/* Action Button - min 44px touch target */}
                         <div className="flex-shrink-0">
                           {isOwned ? (
                             <button
                               onClick={() => handleSelect(character)}
                               disabled={isSelected}
-                              className={`px-4 py-2 rounded-xl font-bold transition-all ${
+                              className={`min-w-[80px] min-h-[44px] px-4 py-3 rounded-xl font-bold transition-all ${
                                 isSelected
                                   ? 'bg-emerald-500 text-white cursor-default'
                                   : 'bg-white/20 text-white hover:bg-white/30'
@@ -251,7 +251,7 @@ const CharacterShop: React.FC<CharacterShopProps> = ({
                             <button
                               onClick={() => handlePurchase(character)}
                               disabled={!isConnected}
-                              className={`px-4 py-2 rounded-xl font-bold shadow-lg transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                              className={`min-w-[80px] min-h-[44px] px-4 py-3 rounded-xl font-bold shadow-lg transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
                                 isOnBase
                                   ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white'
                                   : 'bg-gradient-to-r from-gray-500 to-gray-600 text-gray-300'

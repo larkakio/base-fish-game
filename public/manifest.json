@@ -4,24 +4,24 @@
   "description": "Match-3 puzzle game with water physics. Collect unique fish NFTs and compete on the global leaderboard!",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d2847",
-  "theme_color": "#0d2847",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/fish.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "/icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
     }
   ],
   "frame": {
     "version": "1",
     "name": "Base Fish",
-    "iconUrl": "https://my-fishdom-game.vercel.app/fish.svg",
+    "iconUrl": "https://my-fishdom-game.vercel.app/icon-1024.png",
     "homeUrl": "https://my-fishdom-game.vercel.app",
-    "imageUrl": "https://my-fishdom-game.vercel.app/frame-image.png",
+    "imageUrl": "https://my-fishdom-game.vercel.app/hero-image.png",
     "buttonTitle": "🎮 Play",
-    "splashImageUrl": "https://my-fishdom-game.vercel.app/fish.svg",
-    "splashBackgroundColor": "#0d2847"
+    "splashImageUrl": "https://my-fishdom-game.vercel.app/hero-image.png",
+    "splashBackgroundColor": "#0f172a"
   }
 }
