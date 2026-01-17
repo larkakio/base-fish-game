@@ -32,7 +32,6 @@ const App: React.FC = () => {
 
   // Onboarding state
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
 
   // Game state
   const [currentScreen, setCurrentScreen] = useState<Screen>('menu');
@@ -114,8 +113,6 @@ const App: React.FC = () => {
         const onboardingSeen = localStorage.getItem('basefish_onboarding_seen');
         if (!onboardingSeen) {
           setShowOnboarding(true);
-        } else {
-          setHasSeenOnboarding(true);
         }
 
         setIsSDKLoaded(true);
@@ -285,7 +282,6 @@ const App: React.FC = () => {
 
   const handleCloseOnboarding = useCallback(() => {
     setShowOnboarding(false);
-    setHasSeenOnboarding(true);
     localStorage.setItem('basefish_onboarding_seen', 'true');
   }, []);
 
