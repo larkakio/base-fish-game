@@ -15,10 +15,10 @@
     "splashBackgroundColor": "#0d2847",
     "webhookUrl": "https://my-fishdom-game.vercel.app/api/webhook",
     "primaryCategory": "games",
-    "tags": ["game", "puzzle", "match3", "fish", "base", "nft"],
+    "tags": ["game", "puzzle", "match3", "fish", "base"],
     "heroImageUrl": "https://my-fishdom-game.vercel.app/og-image.png",
-    "tagline": "Match fish, earn points, top the leaderboard!",
-    "ogTitle": "Base Fish - Match-3 Puzzle Game",
+    "tagline": "Match fish, top the board!",
+    "ogTitle": "Base Fish - Match-3 Game",
     "ogDescription": "Play Base Fish on Base Network. Collect fish NFTs and compete globally!",
     "ogImageUrl": "https://my-fishdom-game.vercel.app/og-image.png"
   }
