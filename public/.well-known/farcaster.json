@@ -4,7 +4,7 @@
     "payload": "eyJkb21haW4iOiJteS1maXNoZG9tLWdhbWUudmVyY2VsLmFwcCJ9",
     "signature": "Pm9rpb7tsgvQsrB3WjBZE0uo/dJ/V2rqh9OrGEnQObRem/kUicYczfFzF31bH/9Sn/IsImI8G5H44pM2gq3OMxw="
   },
-  "frame": {
+  "miniapp": {
     "version": "1",
     "name": "Base Fish",
     "subtitle": "Match-3 puzzle adventure",
@@ -21,7 +21,6 @@
       "https://my-fishdom-game.vercel.app/screenshot-2.png",
       "https://my-fishdom-game.vercel.app/screenshot-3.png"
     ],
-    "imageUrl": "https://my-fishdom-game.vercel.app/hero-image.png",
     "heroImageUrl": "https://my-fishdom-game.vercel.app/hero-image.png",
     "tagline": "Match fish, win rewards!",
     "ogTitle": "Base Fish Game",
