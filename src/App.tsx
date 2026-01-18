@@ -656,33 +656,26 @@ const App: React.FC = () => {
               transition={{ delay: 0.4 }}
               className="mt-6 w-full max-w-sm"
             >
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="mt-6 w-full max-w-sm"
-              >
-                <p className={`text-center ${themeClasses.textMuted} mb-3 font-medium`}>Select Level</p>
-                <div className="grid grid-cols-5 gap-2">
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
-                    <button
-                      key={level}
-                      onClick={() => setCurrentLevel(level)}
-                      disabled={level > userStats.level}
-                      className={`aspect-square rounded-xl font-bold text-lg transition-all min-w-[48px] min-h-[48px] ${
-                        level === currentLevel
-                          ? 'bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-lg scale-110'
-                          : level <= userStats.level
-                          ? theme === 'dark' ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-white text-gray-800 hover:bg-gray-100 shadow'
-                          : theme === 'dark' ? 'bg-black/30 text-gray-500 cursor-not-allowed' : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                      }`}
-                    >
-                      {level <= userStats.level ? level : '🔒'}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+              <p className={`text-center ${themeClasses.textMuted} mb-3 font-medium`}>Select Level</p>
+              <div className="grid grid-cols-5 gap-2">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
+                  <button
+                    key={level}
+                    onClick={() => setCurrentLevel(level)}
+                    disabled={level > userStats.level}
+                    className={`aspect-square rounded-xl font-bold text-lg transition-all min-w-[48px] min-h-[48px] ${
+                      level === currentLevel
+                        ? 'bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-lg scale-110'
+                        : level <= userStats.level
+                        ? theme === 'dark' ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-white text-gray-800 hover:bg-gray-100 shadow'
+                        : theme === 'dark' ? 'bg-black/30 text-gray-500 cursor-not-allowed' : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    {level <= userStats.level ? level : '🔒'}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
 
             {/* Built on Base */}
             <motion.div
