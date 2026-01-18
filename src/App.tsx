@@ -92,7 +92,7 @@ const App: React.FC = () => {
         accent: 'text-blue-600',
       };
 
-  // Initialize Farcaster Frame SDK
+  // Initialize Farcaster Frame SDK and auto-connect wallet
   useEffect(() => {
     const initSDK = async () => {
       try {
@@ -107,6 +107,22 @@ const App: React.FC = () => {
 
         if (context?.client?.safeAreaInsets) {
           setSafeAreaInsets(context.client.safeAreaInsets);
+        }
+
+        // Auto-connect wallet if Farcaster SDK wallet is available
+        if (sdk.wallet?.ethProvider && !isConnected) {
+          console.log('[Base Fish] Auto-connecting wallet via Farcaster SDK...');
+          try {
+            await sdk.wallet.ethProvider.request({
+              method: 'eth_requestAccounts',
+            });
+            // Trigger wagmi connect
+            setTimeout(() => {
+              connect({ connector: injected(), chainId: REQUIRED_CHAIN_ID });
+            }, 500);
+          } catch (walletError) {
+            console.log('[Base Fish] Auto-connect failed:', walletError);
+          }
         }
 
         // Check if user has seen onboarding
@@ -134,7 +150,7 @@ const App: React.FC = () => {
     };
 
     initSDK();
-  }, []);
+  }, [isConnected, connect]);
 
   // Network check
   useEffect(() => {
@@ -594,47 +610,52 @@ const App: React.FC = () => {
             )}
 
             {/* Menu Buttons - 56px min height for touch targets */}
+            {/* Always show Play button - game can be played without wallet (Orange Fish is free) */}
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="w-full max-w-sm space-y-3"
             >
-              {!isConnected ? (
+              <button
+                onClick={startGame}
+                className="w-full py-4 px-6 bg-gradient-to-r from-emerald-400 to-cyan-500 hover:from-emerald-500 hover:to-cyan-600 rounded-2xl font-bold text-white text-lg shadow-lg min-h-[56px] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                🎮 Play Level {currentLevel}
+              </button>
+
+              <button
+                onClick={() => setShowShop(true)}
+                className="w-full py-4 px-6 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 rounded-2xl font-bold text-white text-lg shadow-lg min-h-[56px] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                🛒 Character Shop
+              </button>
+
+              <button
+                onClick={() => setShowLeaderboard(true)}
+                className="w-full py-4 px-6 bg-gradient-to-r from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600 rounded-2xl font-bold text-white text-lg shadow-lg min-h-[56px] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                🏆 Leaderboard
+              </button>
+
+              {/* Optional: Show Connect Wallet button only if not connected (for buying characters) */}
+              {!isConnected && (
                 <button
                   onClick={handleConnect}
-                  className="w-full py-4 px-6 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-2xl font-bold text-white text-lg shadow-lg min-h-[56px] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full py-3 px-6 bg-white/10 hover:bg-white/20 rounded-xl font-medium text-white/80 text-sm min-h-[44px] transition-colors"
                 >
-                  Connect Wallet
+                  Connect Wallet (optional for buying characters)
                 </button>
-              ) : (
-                <>
-                  <button
-                    onClick={startGame}
-                    className="w-full py-4 px-6 bg-gradient-to-r from-emerald-400 to-cyan-500 hover:from-emerald-500 hover:to-cyan-600 rounded-2xl font-bold text-white text-lg shadow-lg min-h-[56px] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    🎮 Play Level {currentLevel}
-                  </button>
-
-                  <button
-                    onClick={() => setShowShop(true)}
-                    className="w-full py-4 px-6 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 rounded-2xl font-bold text-white text-lg shadow-lg min-h-[56px] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    🛒 Character Shop
-                  </button>
-
-                  <button
-                    onClick={() => setShowLeaderboard(true)}
-                    className="w-full py-4 px-6 bg-gradient-to-r from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600 rounded-2xl font-bold text-white text-lg shadow-lg min-h-[56px] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    🏆 Leaderboard
-                  </button>
-                </>
               )}
             </motion.div>
 
-            {/* Level Select */}
-            {isConnected && (
+            {/* Level Select - always show */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="mt-6 w-full max-w-sm"
+            >
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
