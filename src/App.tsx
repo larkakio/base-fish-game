@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import sdk from '@farcaster/frame-sdk';
 import { useAccount, useConnect, useWriteContract, useReadContract, useSwitchChain, useChainId } from 'wagmi';
 import { injected } from 'wagmi/connectors';
 
@@ -25,10 +24,6 @@ const App: React.FC = () => {
   // Theme state (light/dark mode)
   const [theme, setTheme] = useState<Theme>('dark');
 
-  // Farcaster Frame SDK state
-  const [isSDKLoaded, setIsSDKLoaded] = useState(false);
-  const [farcasterUser, setFarcasterUser] = useState<any>(null);
-  const [safeAreaInsets, setSafeAreaInsets] = useState({ top: 0, bottom: 0, left: 0, right: 0 });
 
   // Onboarding state
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -92,65 +87,12 @@ const App: React.FC = () => {
         accent: 'text-blue-600',
       };
 
-  // Initialize Farcaster Frame SDK and auto-connect wallet
   useEffect(() => {
-    const initSDK = async () => {
-      try {
-        console.log('[Base Fish] Initializing SDK...');
-        const context = await sdk.context;
-        console.log('[Base Fish] SDK Context:', context);
-        
-        if (context?.user) {
-          setFarcasterUser(context.user);
-          console.log('[Base Fish] User:', context.user);
-        }
-
-        if (context?.client?.safeAreaInsets) {
-          setSafeAreaInsets(context.client.safeAreaInsets);
-        }
-
-        // Auto-connect wallet if Farcaster SDK wallet is available
-        if (sdk.wallet?.ethProvider && !isConnected) {
-          console.log('[Base Fish] Auto-connecting wallet via Farcaster SDK...');
-          try {
-            await sdk.wallet.ethProvider.request({
-              method: 'eth_requestAccounts',
-            });
-            // Trigger wagmi connect
-            setTimeout(() => {
-              connect({ connector: injected(), chainId: REQUIRED_CHAIN_ID });
-            }, 500);
-          } catch (walletError) {
-            console.log('[Base Fish] Auto-connect failed:', walletError);
-          }
-        }
-
-        // Check if user has seen onboarding
-        const onboardingSeen = localStorage.getItem('basefish_onboarding_seen');
-        if (!onboardingSeen) {
-          setShowOnboarding(true);
-        }
-
-        setIsSDKLoaded(true);
-        
-        setTimeout(() => {
-          sdk.actions.ready();
-          console.log('[Base Fish] SDK ready() called');
-        }, 100);
-      } catch (error) {
-        console.log('[Base Fish] Running standalone mode');
-        
-        const onboardingSeen = localStorage.getItem('basefish_onboarding_seen');
-        if (!onboardingSeen) {
-          setShowOnboarding(true);
-        }
-        
-        setIsSDKLoaded(true);
-      }
-    };
-
-    initSDK();
-  }, [isConnected, connect]);
+    const onboardingSeen = localStorage.getItem('basefish_onboarding_seen');
+    if (!onboardingSeen) {
+      setShowOnboarding(true);
+    }
+  }, []);
 
   // Network check
   useEffect(() => {
@@ -204,23 +146,6 @@ const App: React.FC = () => {
   const handleConnect = useCallback(async () => {
     try {
       console.log('[Base Fish] Connecting wallet...');
-      
-      // Check if Farcaster SDK wallet is available (inside Warpcast/Base App)
-      if (sdk.wallet?.ethProvider) {
-        console.log('[Base Fish] Farcaster SDK wallet detected');
-        try {
-          // Request accounts directly from Farcaster SDK
-          await sdk.wallet.ethProvider.request({
-            method: 'eth_requestAccounts',
-          });
-          console.log('[Base Fish] Farcaster wallet connected');
-        } catch (sdkError) {
-          console.log('[Base Fish] SDK request failed:', sdkError);
-        }
-      }
-      
-      // Use wagmi injected connector (will pick up Farcaster's injected provider)
-      console.log('[Base Fish] Connecting via injected connector');
       connect(
         { connector: injected(), chainId: REQUIRED_CHAIN_ID },
         {
@@ -252,8 +177,8 @@ const App: React.FC = () => {
     if (address) {
       await saveScore({
         walletAddress: address,
-        farcasterUsername: farcasterUser?.username,
-        farcasterFid: farcasterUser?.fid,
+        farcasterUsername: undefined,
+        farcasterFid: undefined,
         score,
         level,
         character: selectedCharacter,
@@ -270,7 +195,7 @@ const App: React.FC = () => {
     if (level < 10) {
       setCurrentLevel(level + 1);
     }
-  }, [address, farcasterUser, selectedCharacter]);
+  }, [address, selectedCharacter]);
 
   const handleGameOver = useCallback(async (score: number) => {
     setFinalScore(score);
@@ -279,8 +204,8 @@ const App: React.FC = () => {
     if (address) {
       await saveScore({
         walletAddress: address,
-        farcasterUsername: farcasterUser?.username,
-        farcasterFid: farcasterUser?.fid,
+        farcasterUsername: undefined,
+        farcasterFid: undefined,
         score,
         level: currentLevel,
         character: selectedCharacter,
@@ -292,7 +217,7 @@ const App: React.FC = () => {
         gamesPlayed: prev.gamesPlayed + 1,
       }));
     }
-  }, [address, farcasterUser, currentLevel, selectedCharacter]);
+  }, [address, currentLevel, selectedCharacter]);
 
   const shareScore = useCallback(() => {
     const appUrl = 'https://my-fishdom-game.vercel.app';
@@ -373,33 +298,17 @@ const App: React.FC = () => {
     }
   }, [writeContract, isOnBase, handleSwitchToBase]);
 
-  // Get display name (username preferred over address)
-  const displayName = farcasterUser?.username || (address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Guest');
-  const avatarUrl = farcasterUser?.pfpUrl || null;
-
-  if (!isSDKLoaded) {
-    return (
-      <div className={`min-h-screen ${themeClasses.bg} flex items-center justify-center`}>
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-6xl"
-        >
-          🐠
-        </motion.div>
-        <p className={`ml-4 ${themeClasses.textMuted}`}>Loading...</p>
-      </div>
-    );
-  }
+  const displayName = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : 'Guest';
+  const avatarUrl = null;
 
   return (
     <div 
       className={`min-h-screen ${themeClasses.bg} overflow-hidden`}
       style={{
-        paddingTop: safeAreaInsets.top,
-        paddingBottom: Math.max(safeAreaInsets.bottom, 80), // Space for bottom nav
-        paddingLeft: safeAreaInsets.left,
-        paddingRight: safeAreaInsets.right,
+        paddingTop: "env(safe-area-inset-top, 0px)",
+        paddingBottom: "max(80px, env(safe-area-inset-bottom, 0px))",
+        paddingLeft: "env(safe-area-inset-left, 0px)",
+        paddingRight: "env(safe-area-inset-right, 0px)",
       }}
     >
       {/* Onboarding Popup */}
@@ -733,7 +642,7 @@ const App: React.FC = () => {
           initial={{ y: 100 }}
           animate={{ y: 0 }}
           className={`fixed bottom-0 left-0 right-0 z-50 ${theme === 'dark' ? 'bg-slate-900/95' : 'bg-white/95'} backdrop-blur-lg border-t ${theme === 'dark' ? 'border-white/10' : 'border-gray-200'} safe-area-bottom`}
-          style={{ paddingBottom: safeAreaInsets.bottom }}
+          style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
         >
           <div className="flex items-center justify-around py-2">
             <NavButton 
