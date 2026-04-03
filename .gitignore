@@ -38,6 +38,10 @@ coverage
 *.pem
 .vercel
 
+# Foundry
+contracts/out
+contracts/cache
+
 # Hardhat files
 artifacts/
 cache/

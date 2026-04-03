@@ -1,23 +1,37 @@
 /// <reference types="vite/client" />
 import { http, createConfig } from "wagmi";
-import { base } from "wagmi/chains";
-import { baseAccount, injected } from "wagmi/connectors";
+import { mainnet } from "viem/chains";
+import { baseAccount, injected, walletConnect } from "wagmi/connectors";
+
+import { getTargetChain } from "@/lib/publicEnv";
+
+const target = getTargetChain();
+const wcProjectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID;
 
 export const wagmiConfig = createConfig({
-  chains: [base],
+  chains: [target, mainnet],
   connectors: [
     injected(),
     baseAccount({
       appName: "Base Fish",
     }),
+    ...(wcProjectId
+      ? [
+          walletConnect({
+            projectId: wcProjectId,
+            showQrModal: true,
+          }),
+        ]
+      : []),
   ],
   transports: {
-    [base.id]: http(),
+    [target.id]: http(),
+    [mainnet.id]: http(),
   },
 });
 
-export { base };
-export const REQUIRED_CHAIN_ID = base.id;
+export { target as targetChain };
+export const REQUIRED_CHAIN_ID = target.id;
 
 declare module "wagmi" {
   interface Register {
