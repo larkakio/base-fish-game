@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount, useConnect, useWriteContract, useReadContract, useSwitchChain, useChainId } from 'wagmi';
-import { injected } from 'wagmi/connectors';
 
 import FishdomGame from './game/GameEngine';
 import Leaderboard from './components/Leaderboard';
@@ -52,7 +51,7 @@ const App: React.FC = () => {
 
   // Wagmi hooks
   const { address, isConnected } = useAccount();
-  const { connect } = useConnect();
+  const { connect, connectors } = useConnect();
   const { writeContract } = useWriteContract();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
@@ -144,26 +143,33 @@ const App: React.FC = () => {
   }, [switchChain]);
 
   const handleConnect = useCallback(async () => {
+    const connector =
+      connectors.find((c) => c.id === "baseAccount" || c.name === "Base Account") ??
+      connectors[0];
+    if (!connector) {
+      console.error("[Base Fish] No wallet connectors available");
+      return;
+    }
     try {
-      console.log('[Base Fish] Connecting wallet...');
+      console.log("[Base Fish] Connecting wallet...");
       connect(
-        { connector: injected(), chainId: REQUIRED_CHAIN_ID },
+        { connector, chainId: REQUIRED_CHAIN_ID },
         {
           onSuccess: () => {
-            console.log('[Base Fish] Connected successfully');
+            console.log("[Base Fish] Connected successfully");
             if (chainId !== REQUIRED_CHAIN_ID) {
-              handleSwitchToBase();
+              void handleSwitchToBase();
             }
           },
           onError: (error) => {
-            console.error('[Base Fish] Connect error:', error);
+            console.error("[Base Fish] Connect error:", error);
           },
         }
       );
     } catch (error) {
-      console.error('[Base Fish] Failed to connect wallet:', error);
+      console.error("[Base Fish] Failed to connect wallet:", error);
     }
-  }, [connect, chainId, handleSwitchToBase]);
+  }, [connect, connectors, chainId, handleSwitchToBase]);
 
   const handleScoreUpdate = useCallback((score: number) => {
     setCurrentScore(score);

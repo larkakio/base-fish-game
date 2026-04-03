@@ -40,10 +40,6 @@ export function DailyCheckIn() {
 
   async function handleCheckIn() {
     setErr(null);
-    if (!contract) {
-      setErr("Check-in is not configured.");
-      return;
-    }
     if (!isConnected || !address) {
       setWalletOpen(true);
       return;
@@ -70,7 +66,7 @@ export function DailyCheckIn() {
 
   return (
     <>
-      <div className="pointer-events-auto fixed bottom-4 left-4 right-4 z-[80] flex max-w-md flex-col gap-2 sm:left-auto sm:right-4 sm:w-80">
+      <div className="pointer-events-auto fixed bottom-4 left-4 right-4 z-[10000] flex max-w-md flex-col gap-2 sm:left-auto sm:right-4 sm:w-80">
         {err ? (
           <p className="rounded-lg bg-red-950/90 px-3 py-2 text-xs text-red-200">{err}</p>
         ) : null}
@@ -97,7 +93,7 @@ export function DailyCheckIn() {
           ) : (
             <button
               type="button"
-              disabled={busy || !contract}
+              disabled={busy}
               onClick={() => void handleCheckIn()}
               className="shrink-0 rounded-xl bg-magenta-500 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
               style={{ background: "#e879f9" }}

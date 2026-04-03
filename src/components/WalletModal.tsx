@@ -8,13 +8,13 @@ type Props = {
 };
 
 export function WalletModal({ open, onClose }: Props) {
-  const { connectors, connect, isPending } = useConnect();
+  const { connectors, connectAsync, isPending } = useConnect();
 
   if (!open) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center bg-black/70 p-4"
+      className="fixed inset-0 z-[10001] flex items-end justify-center bg-black/70 p-4 sm:items-center"
       role="dialog"
       aria-modal="true"
       aria-labelledby="wallet-modal-title"
@@ -32,22 +32,37 @@ export function WalletModal({ open, onClose }: Props) {
             Close
           </button>
         </div>
-        <ul className="flex flex-col gap-2">
-          {connectors.map((connector) => (
-            <li key={connector.uid}>
-              <button
-                type="button"
-                disabled={isPending}
-                onClick={() => {
-                  connect({ connector }, { onSuccess: () => onClose() });
-                }}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-white transition hover:bg-white/10 disabled:opacity-40"
-              >
-                {connector.name}
-              </button>
-            </li>
-          ))}
-        </ul>
+        {connectors.length === 0 ? (
+          <p className="text-sm text-slate-400">
+            No wallet connectors loaded. Set{" "}
+            <code className="text-cyan-300">VITE_WALLETCONNECT_PROJECT_ID</code>{" "}
+            for WalletConnect, or use Base Account in a supported browser.
+          </p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {connectors.map((connector) => (
+              <li key={connector.uid}>
+                <button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => {
+                    void (async () => {
+                      try {
+                        await connectAsync({ connector });
+                        onClose();
+                      } catch {
+                        /* user cancelled or connector error */
+                      }
+                    })();
+                  }}
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-left text-sm text-white transition hover:bg-white/10 disabled:opacity-40"
+                >
+                  {connector.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

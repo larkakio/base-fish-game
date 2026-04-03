@@ -12,3 +12,11 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare module "@fish-wagmi/baseAccount" {
+  export { baseAccount } from "@wagmi/connectors";
+}
+
+declare module "@fish-wagmi/walletConnect" {
+  export { walletConnect } from "@wagmi/connectors";
+}

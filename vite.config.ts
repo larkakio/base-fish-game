@@ -1,14 +1,24 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const wagmiConnectorsEsm = path.resolve(
+  __dirname,
+  "node_modules/@wagmi/connectors/dist/esm"
+);
 
 export default defineConfig({
   plugins: [react()],
   define: {
-    global: 'globalThis',
+    global: "globalThis",
   },
   resolve: {
     alias: {
-      '@': '/src',
+      "@": path.resolve(__dirname, "./src"),
+      "@fish-wagmi/baseAccount": path.join(wagmiConnectorsEsm, "baseAccount.js"),
+      "@fish-wagmi/walletConnect": path.join(wagmiConnectorsEsm, "walletConnect.js"),
     },
   },
   build: {

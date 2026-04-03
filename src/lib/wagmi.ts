@@ -1,7 +1,7 @@
-/// <reference types="vite/client" />
+import { baseAccount } from "@fish-wagmi/baseAccount";
+import { walletConnect } from "@fish-wagmi/walletConnect";
 import { http, createConfig } from "wagmi";
 import { mainnet } from "viem/chains";
-import { baseAccount, injected, walletConnect } from "wagmi/connectors";
 
 import { getTargetChain } from "@/lib/publicEnv";
 
@@ -11,7 +11,6 @@ const wcProjectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID;
 export const wagmiConfig = createConfig({
   chains: [target, mainnet],
   connectors: [
-    injected(),
     baseAccount({
       appName: "Base Fish",
     }),
